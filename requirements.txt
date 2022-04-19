@@ -1,0 +1,8 @@
+html-table-parser-python3
+lxml
+openpyxl
+pandas
+python-crontab
+python-dateutil
+requests
+
