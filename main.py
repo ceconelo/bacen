@@ -11,8 +11,8 @@ def main():
     print('Initializing')
     bacen = BacenHistorical()
 
-    histotical_data = bacen.get_last_row_historical_series()
-    df_historical = pd.DataFrame(histotical_data)
+    histotical_data, index = bacen.get_last_row_historical_series()
+    df_historical = pd.DataFrame(histotical_data, index=index)
     df_historical.to_csv('dataset/historical_series.csv')
 
     provisional_data = bacen.get_provisional_data()

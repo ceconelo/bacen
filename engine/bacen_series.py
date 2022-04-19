@@ -23,24 +23,25 @@ class BacenHistorical:
 
     # Method that parses the historical series data
     def get_last_row_historical_series(self):
+        historical_data = {}
         # Scrolling through the series list
         for h_s in self.historical_series:
             print(f'{GREEN} Looking for series: {h_s}')
             response = RequestAPI(h_s).get()
             table = pd.read_html(response.content, match='List of values', header=2, thousands='.', decimal=',')[0]
             table = table[:-2]  # Deleting the last two lines
-            self.data['Serie'].append(h_s)
-            self.data['Date'].append(table.iloc[-1, 0])
-            self.data['Value'].append(table.iloc[-1, 1])
+
+            historical_data[h_s] = table.iloc[:, 1].values
+            index = table.iloc[:, 0].values
             sleep(5)
-        return self.data
+        return historical_data, index
 
     # Method that accesses the worksheet that contains the provisional data of the series
     def get_provisional_data(self):
         print(f'{GREEN} Getting provisional data')
         # Always looking for last month's worksheet
-        last_mounth = (datetime.today() - timedelta(days=30)).strftime('%m')
-        #last_mounth = '01'  # Test
+        #last_mounth = (datetime.today() - timedelta(days=30)).strftime('%m')
+        last_mounth = '01'  # Test
         url = f'https://www.bcb.gov.br/content/estatisticas/hist_estatisticassetorexterno/2022{last_mounth}_Tabelas_de_estatisticas_do_setor_externo.xlsx'
         try:
             table = pd.read_excel(url, sheet_name='Tabela 1')
